@@ -6,18 +6,18 @@ sauce:
   tunnel:
     name: "chaos-tunnel"
   metadata:
-    build: "iOS Canary Network Interception Test"
+    build: "iOS Interactive Canary Test"
 
 xcuitest:
   app: build/Build/Products/Debug-iphoneos/ChaosCanary.app
   testApp: build/Build/Products/Debug-iphoneos/ChaosCanaryUITests-Runner.app
 
 suites:
-  - name: "Canary Network Interception Suite"
+  - name: "Interactive Happy Path Suite"
     # This filter ensures ONLY our new network test runs.
     testOptions:
       class:
-        - ChaosCanaryUITests.NetworkCallTests
+        - ChaosCanaryUITests.InteractiveUITests
     devices:
       - name: "iPhone.*"
 
