@@ -1,0 +1,19 @@
+# Runs the random failure test through the random failure proxy.
+apiVersion: v1alpha
+kind: xcuitest
+sauce:
+  region: us-west-1
+  tunnel:
+    name: "chaos-tunnel-random-failure"
+  metadata:
+    build: "Random Failure Chaos Experiment"
+xcuitest:
+  app: build/Build/Products/Debug-iphoneos/ChaosCanary.app
+  testApp: build/Build/Products/Debug-iphoneos/ChaosCanaryUITests-Runner.app
+suites:
+  - name: "Random Failure Chaos Suite"
+    testOptions:
+      class:
+        - ChaosCanaryUITests.InteractiveUITests/testApiRandomFailureChaosExperiment
+    devices:
+      - name: "iPhone.*"

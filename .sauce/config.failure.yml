@@ -1,23 +1,22 @@
+# .sauce/config.failure.yml
 apiVersion: v1alpha
 kind: xcuitest
 
 sauce:
   region: us-west-1
   tunnel:
-    name: "chaos-tunnel"
+    name: "chaos-tunnel-failure"
   metadata:
-    build: "iOS Interactive Canary Test"
+    build: "API Failure Chaos Experiment"
 
 xcuitest:
   app: build/Build/Products/Debug-iphoneos/ChaosCanary.app
   testApp: build/Build/Products/Debug-iphoneos/ChaosCanaryUITests-Runner.app
 
 suites:
-  - name: "Interactive Happy Path Suite"
-    # This filter ensures ONLY our new network test runs.
+  - name: "API Failure Chaos Suite"
     testOptions:
       class:
-        - ChaosCanaryUITests.InteractiveUITests
+        - ChaosCanaryUITests.InteractiveUITests/testApiFailureChaosExperiment
     devices:
       - name: "iPhone.*"
-

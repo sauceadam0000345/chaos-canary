@@ -1,0 +1,23 @@
+# .sauce/config.latency.yml
+apiVersion: v1alpha
+kind: xcuitest
+
+sauce:
+  region: us-west-1
+  tunnel:
+    name: "chaos-tunnel-latency"
+  metadata:
+    build: "Latency Chaos Experiment"
+
+xcuitest:
+  app: build/Build/Products/Debug-iphoneos/ChaosCanary.app
+  testApp: build/Build/Products/Debug-iphoneos/ChaosCanaryUITests-Runner.app
+
+suites:
+  - name: "Latency Chaos Suite"
+    testOptions:
+      class:
+        - ChaosCanaryUITests.InteractiveUITests/testApiLatencyChaosExperiment
+    devices:
+      - name: "iPhone.*"
+

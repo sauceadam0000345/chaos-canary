@@ -1,67 +1,142 @@
-# This file defines how to run our mitmproxy and Sauce Connect services together.
+# This file defines multiple, parallel chaos environments.
+# Running 'docker-compose up' will start all of them simultaneously.
 version: '3.8'
 
 services:
-  # Service 1: The Chaos Proxy
-  proxy:
-    # Build the Docker image from the Dockerfile in the current directory.
+  #========================================#
+  # Environment 1: API Failure             #
+  #========================================#
+
+  proxy-failure:
     build: .
-    # Name the image we build for clarity.
     image: chaos-tools:latest
-    # The command that this container will run on startup.
-    # It starts the mitmweb interface in regular proxy mode on port 8082.
     command: >
       mitmweb
-      --mode regular
-      --listen-port 8082
-      --web-host 0.0.0.0
-      --web-port 8081
+      --mode regular --listen-port 8082
+      --web-host 0.0.0.0 --web-port 8081
       -s /app/chaos_programmable.py
       --ssl-insecure
-    # Map ports from the container to your local machine.
-    # You can access the web UI at http://localhost:8081
-    # The proxy itself runs on port 8082.
     ports:
-      - "8081:8081"
+      - "8081:8081" # Web UI: http://localhost:8081
       - "8082:8082"
-    # Pass through environment variables from your terminal into the container.
-    # This allows you to configure the chaos script dynamically.
-    #
-    # --- HOW TO USE CHAOS MODES ---
-    # Before running 'docker-compose up', set these variables in your terminal.
-    #
-    # Example 1: Inject 5 seconds of latency into the login API
-    #   export CHAOS_MODE="LATENCY"
-    #   export CHAOS_TARGET_API="v1/login"
-    #   export CHAOS_DELAY_SECONDS="5"
-    #
-    # Example 2: Make the product listing API fail with a 500 error
-    #   export CHAOS_MODE="API_FAILURE"
-    #   export CHAOS_TARGET_API="v1/products"
-    #   export CHAOS_HTTP_CODE="500"
-    #
     environment:
-      - CHAOS_MODE
-      - CHAOS_TARGET_API
-      - CHAOS_HTTP_CODE
-      - CHAOS_DELAY_SECONDS
+      - CHAOS_MODE=API_FAILURE
+      - CHAOS_TARGET_API=todos/1
+      - CHAOS_HTTP_CODE=503
 
-  # Service 2: The Sauce Connect Tunnel
-  tunnel:
-    # Use the same image we built for the proxy service.
+  tunnel-failure:
     image: chaos-tools:latest
-    # This ensures the tunnel only starts after the proxy is running.
     depends_on:
-      - proxy
-    # The command to start the Sauce Connect client.
+      - proxy-failure
     command: >
       sc run
-      --tunnel-name "${SAUCE_TUNNEL_NAME}"
+      --tunnel-name "chaos-tunnel-failure"
       --region "${SAUCE_REGION}"
       --direct-domains ".*\\.apple\\.com"
-      --proxy http://proxy:8082
-    # Load sensitive credentials and configuration from a separate .env file
-    # for better security and management.
+      --proxy http://proxy-failure:8082
+    env_file:
+      - .env
+
+  #========================================#
+  # Environment 2: Latency                 #
+  #========================================#
+
+  proxy-latency:
+    image: chaos-tools:latest
+    command: >
+      mitmweb
+      --mode regular --listen-port 8084
+      --web-host 0.0.0.0 --web-port 8083
+      -s /app/chaos_programmable.py
+      --ssl-insecure
+    ports:
+      - "8083:8083" # Web UI: http://localhost:8083
+      - "8084:8084"
+    environment:
+      - CHAOS_MODE=LATENCY
+      - CHAOS_TARGET_API=todos/1
+      - CHAOS_DELAY_SECONDS=5
+
+  tunnel-latency:
+    image: chaos-tools:latest
+    depends_on:
+      - proxy-latency
+    command: >
+      sc run
+      --tunnel-name "chaos-tunnel-latency"
+      --region "${SAUCE_REGION}"
+      --direct-domains ".*\\.apple\\.com"
+      --proxy http://proxy-latency:8084
+    env_file:
+      - .env
+
+  #========================================#
+  # Environment 3: Normal (No Chaos)       #
+  #========================================#
+
+  proxy-normal:
+    image: chaos-tools:latest
+    command: >
+      mitmweb
+      --mode regular --listen-port 8086
+      --web-host 0.0.0.0 --web-port 8085
+      -s /app/chaos_programmable.py
+      --ssl-insecure
+    ports:
+      - "8085:8085" # Web UI: http://localhost:8085
+      - "8086:8086"
+    # No CHAOS_MODE is set, so it defaults to NONE.
+
+  tunnel-normal:
+    image: chaos-tools:latest
+    depends_on:
+      - proxy-normal
+    command: >
+      sc run
+      --tunnel-name "chaos-tunnel-normal"
+      --region "${SAUCE_REGION}"
+      --direct-domains ".*\\.apple\\.com"
+      --proxy http://proxy-normal:8086
+    env_file:
+      - .env
+
+  #========================================#
+  # Environment 4: Random Failure (NEW)    #
+  #========================================#
+
+  proxy-random-failure:
+    image: chaos-tools:latest
+    command: >
+      mitmweb
+      --mode regular --listen-port 8088
+      --web-host 0.0.0.0 --web-port 8087
+      -s /app/chaos_programmable.py
+      --ssl-insecure
+    ports:
+      - "8087:8087" # Web UI: http://localhost:8087
+      - "8088:8088"
+    environment:
+      # Hardcode this proxy to be in RANDOM_FAILURE mode.
+      - CHAOS_MODE=RANDOM_FAILURE
+      - CHAOS_TARGET_API=todos/1
+      # 25% chance of any given request failing.
+      - CHAOS_FAILURE_RATE=0.25
+      # Possible error codes to return.
+      - CHAOS_FAILURE_CODES=404,500,502,503
+      # Of the requests that fail, 10% will be timeouts instead of error codes.
+      - CHAOS_TIMEOUT_RATE=0.10
+      - CHAOS_TIMEOUT_SECONDS=30
+
+  tunnel-random-failure:
+    image: chaos-tools:latest
+    depends_on:
+      - proxy-random-failure
+    command: >
+      sc run
+      --tunnel-name "chaos-tunnel-random-failure" # New unique tunnel name
+      --region "${SAUCE_REGION}"
+      --direct-domains ".*\\.apple\\.com"
+      --proxy http://proxy-random-failure:8088
     env_file:
       - .env
 
