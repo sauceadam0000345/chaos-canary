@@ -1,0 +1,14 @@
+# .gitignore
+
+# Ignore local environment secrets
+.env
+
+# Ignore build artifacts
+build/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Xcode user-specific files
+*.xcuserdata
+*.xcworkspace

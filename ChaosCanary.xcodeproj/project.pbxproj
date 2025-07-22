@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		1948E46B2E2F350F008423AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1948E4412E2F34EA008423AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1948E4482E2F34EA008423AC;
+			remoteInfo = ChaosCanary;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1948E4492E2F34EA008423AC /* ChaosCanary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChaosCanary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1948E4652E2F350F008423AC /* ChaosCanaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChaosCanaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +40,22 @@
 			path = ChaosCanary;
 			sourceTree = "<group>";
 		};
+		1948E4662E2F350F008423AC /* ChaosCanaryUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ChaosCanaryUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1948E4462E2F34EA008423AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1948E4622E2F350F008423AC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				1948E44B2E2F34EA008423AC /* ChaosCanary */,
+				1948E4662E2F350F008423AC /* ChaosCanaryUITests */,
 				1948E44A2E2F34EA008423AC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				1948E4492E2F34EA008423AC /* ChaosCanary.app */,
+				1948E4652E2F350F008423AC /* ChaosCanaryUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +108,29 @@
 			productReference = 1948E4492E2F34EA008423AC /* ChaosCanary.app */;
 			productType = "com.apple.product-type.application";
 		};
+		1948E4642E2F350F008423AC /* ChaosCanaryUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1948E46D2E2F350F008423AC /* Build configuration list for PBXNativeTarget "ChaosCanaryUITests" */;
+			buildPhases = (
+				1948E4612E2F350F008423AC /* Sources */,
+				1948E4622E2F350F008423AC /* Frameworks */,
+				1948E4632E2F350F008423AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1948E46C2E2F350F008423AC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1948E4662E2F350F008423AC /* ChaosCanaryUITests */,
+			);
+			name = ChaosCanaryUITests;
+			packageProductDependencies = (
+			);
+			productName = ChaosCanaryUITests;
+			productReference = 1948E4652E2F350F008423AC /* ChaosCanaryUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -95,6 +143,10 @@
 				TargetAttributes = {
 					1948E4482E2F34EA008423AC = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					1948E4642E2F350F008423AC = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 1948E4482E2F34EA008423AC;
 					};
 				};
 			};
@@ -113,12 +165,20 @@
 			projectRoot = "";
 			targets = (
 				1948E4482E2F34EA008423AC /* ChaosCanary */,
+				1948E4642E2F350F008423AC /* ChaosCanaryUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1948E4472E2F34EA008423AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1948E4632E2F350F008423AC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +195,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1948E4612E2F350F008423AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1948E46C2E2F350F008423AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1948E4482E2F34EA008423AC /* ChaosCanary */;
+			targetProxy = 1948E46B2E2F350F008423AC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1948E45D2E2F34ED008423AC /* Debug */ = {
@@ -158,7 +233,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.saucelabs.ChaosCanary;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ChaosCanary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -186,7 +261,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.saucelabs.ChaosCanary;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ChaosCanary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -313,6 +388,40 @@
 			};
 			name = Release;
 		};
+		1948E46E2E2F350F008423AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DPAJDGVU2M;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ChaosCanaryUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ChaosCanary;
+			};
+			name = Debug;
+		};
+		1948E46F2E2F350F008423AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DPAJDGVU2M;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ChaosCanaryUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ChaosCanary;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -330,6 +439,15 @@
 			buildConfigurations = (
 				1948E45D2E2F34ED008423AC /* Debug */,
 				1948E45E2E2F34ED008423AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1948E46D2E2F350F008423AC /* Build configuration list for PBXNativeTarget "ChaosCanaryUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1948E46E2E2F350F008423AC /* Debug */,
+				1948E46F2E2F350F008423AC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

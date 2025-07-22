@@ -1,0 +1,23 @@
+apiVersion: v1alpha
+kind: xcuitest
+
+sauce:
+  region: us-west-1
+  tunnel:
+    name: "chaos-tunnel"
+  metadata:
+    build: "iOS Canary Network Interception Test"
+
+xcuitest:
+  app: build/Build/Products/Debug-iphoneos/ChaosCanary.app
+  testApp: build/Build/Products/Debug-iphoneos/ChaosCanaryUITests-Runner.app
+
+suites:
+  - name: "Canary Network Interception Suite"
+    # This filter ensures ONLY our new network test runs.
+    testOptions:
+      class:
+        - ChaosCanaryUITests.NetworkCallTests
+    devices:
+      - name: "iPhone.*"
+

@@ -1,0 +1,67 @@
+# This file defines how to run our mitmproxy and Sauce Connect services together.
+version: '3.8'
+
+services:
+  # Service 1: The Chaos Proxy
+  proxy:
+    # Build the Docker image from the Dockerfile in the current directory.
+    build: .
+    # Name the image we build for clarity.
+    image: chaos-tools:latest
+    # The command that this container will run on startup.
+    # It starts the mitmweb interface in regular proxy mode on port 8082.
+    command: >
+      mitmweb
+      --mode regular
+      --listen-port 8082
+      --web-host 0.0.0.0
+      --web-port 8081
+      -s /app/chaos_programmable.py
+      --ssl-insecure
+    # Map ports from the container to your local machine.
+    # You can access the web UI at http://localhost:8081
+    # The proxy itself runs on port 8082.
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+    # Pass through environment variables from your terminal into the container.
+    # This allows you to configure the chaos script dynamically.
+    #
+    # --- HOW TO USE CHAOS MODES ---
+    # Before running 'docker-compose up', set these variables in your terminal.
+    #
+    # Example 1: Inject 5 seconds of latency into the login API
+    #   export CHAOS_MODE="LATENCY"
+    #   export CHAOS_TARGET_API="v1/login"
+    #   export CHAOS_DELAY_SECONDS="5"
+    #
+    # Example 2: Make the product listing API fail with a 500 error
+    #   export CHAOS_MODE="API_FAILURE"
+    #   export CHAOS_TARGET_API="v1/products"
+    #   export CHAOS_HTTP_CODE="500"
+    #
+    environment:
+      - CHAOS_MODE
+      - CHAOS_TARGET_API
+      - CHAOS_HTTP_CODE
+      - CHAOS_DELAY_SECONDS
+
+  # Service 2: The Sauce Connect Tunnel
+  tunnel:
+    # Use the same image we built for the proxy service.
+    image: chaos-tools:latest
+    # This ensures the tunnel only starts after the proxy is running.
+    depends_on:
+      - proxy
+    # The command to start the Sauce Connect client.
+    command: >
+      sc run
+      --tunnel-name "${SAUCE_TUNNEL_NAME}"
+      --region "${SAUCE_REGION}"
+      --direct-domains ".*\\.apple\\.com"
+      --proxy http://proxy:8082
+    # Load sensitive credentials and configuration from a separate .env file
+    # for better security and management.
+    env_file:
+      - .env
+
