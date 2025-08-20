@@ -19,10 +19,13 @@ services:
     ports:
       - "8081:8081" # Web UI: http://localhost:8081
       - "8082:8082"
+    volumes:
+      - ./recorded-flows:/app/flows  # ADD: Flow recording
     environment:
       - CHAOS_MODE=API_FAILURE
       - CHAOS_TARGET_API=todos/1
       - CHAOS_HTTP_CODE=503
+      - RECORD_FLOWS=true  # ADD: Enable flow recording
 
   tunnel-failure:
     image: chaos-tools:latest
@@ -32,7 +35,7 @@ services:
       sc run
       --tunnel-name "chaos-tunnel-failure"
       --region "${SAUCE_REGION}"
-      --direct-domains ".*\\.apple\\.com"
+      --direct-domains ".*\\\\.apple\\\\.com"
       --proxy http://proxy-failure:8082
     env_file:
       - .env
@@ -52,10 +55,13 @@ services:
     ports:
       - "8083:8083" # Web UI: http://localhost:8083
       - "8084:8084"
+    volumes:
+      - ./recorded-flows:/app/flows  # ADD: Flow recording
     environment:
       - CHAOS_MODE=LATENCY
       - CHAOS_TARGET_API=todos/1
       - CHAOS_DELAY_SECONDS=5
+      - RECORD_FLOWS=true  # ADD: Enable flow recording
 
   tunnel-latency:
     image: chaos-tools:latest
@@ -65,7 +71,7 @@ services:
       sc run
       --tunnel-name "chaos-tunnel-latency"
       --region "${SAUCE_REGION}"
-      --direct-domains ".*\\.apple\\.com"
+      --direct-domains ".*\\\\.apple\\\\.com"
       --proxy http://proxy-latency:8084
     env_file:
       - .env
@@ -85,7 +91,11 @@ services:
     ports:
       - "8085:8085" # Web UI: http://localhost:8085
       - "8086:8086"
-    # No CHAOS_MODE is set, so it defaults to NONE.
+    volumes:
+      - ./recorded-flows:/app/flows  # ADD: Flow recording
+    environment:
+      # No CHAOS_MODE is set, so it defaults to NONE.
+      - RECORD_FLOWS=true  # ADD: Enable flow recording (even for normal mode)
 
   tunnel-normal:
     image: chaos-tools:latest
@@ -95,7 +105,7 @@ services:
       sc run
       --tunnel-name "chaos-tunnel-normal"
       --region "${SAUCE_REGION}"
-      --direct-domains ".*\\.apple\\.com"
+      --direct-domains ".*\\\\.apple\\\\.com"
       --proxy http://proxy-normal:8086
     env_file:
       - .env
@@ -115,6 +125,8 @@ services:
     ports:
       - "8087:8087" # Web UI: http://localhost:8087
       - "8088:8088"
+    volumes:
+      - ./recorded-flows:/app/flows  # ADD: Flow recording
     environment:
       # Hardcode this proxy to be in RANDOM_FAILURE mode.
       - CHAOS_MODE=RANDOM_FAILURE
@@ -126,6 +138,7 @@ services:
       # Of the requests that fail, 10% will be timeouts instead of error codes.
       - CHAOS_TIMEOUT_RATE=0.10
       - CHAOS_TIMEOUT_SECONDS=30
+      - RECORD_FLOWS=true  # ADD: Enable flow recording
 
   tunnel-random-failure:
     image: chaos-tools:latest
@@ -135,10 +148,14 @@ services:
       sc run
       --tunnel-name "chaos-tunnel-random-failure" # New unique tunnel name
       --region "${SAUCE_REGION}"
-      --direct-domains ".*\\.apple\\.com"
+      --direct-domains ".*\\\\.apple\\\\.com"
       --proxy http://proxy-random-failure:8088
     env_file:
       - .env
+
+  #========================================#
+  # Security Scanning Infrastructure       #
+  #========================================#
 
   zap-security:
     image: zaproxy/zap-stable:latest
