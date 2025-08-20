@@ -140,3 +140,28 @@ services:
     env_file:
       - .env
 
+  zap-security:
+    image: zaproxy/zap-stable:latest
+    command: zap.sh -daemon -host 0.0.0.0 -port 8090 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./security-results:/zap/wrk
+      - ./recorded-flows:/app/flows:ro
+
+  security-runner:
+    build: .
+    image: chaos-tools:latest
+    depends_on:
+      - zap-security
+      - proxy-failure
+      - proxy-latency
+      - proxy-normal
+      - proxy-random-failure
+    command: python /app/security_scanner.py
+    volumes:
+      - ./security-results:/app/results
+      - ./recorded-flows:/app/flows
+    environment:
+      - ZAP_HOST=zap-security
+      - ZAP_PORT=8090
