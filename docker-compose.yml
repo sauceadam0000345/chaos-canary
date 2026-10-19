@@ -35,7 +35,10 @@ services:
       --direct-domains ".*\\.apple\\.com"
       --proxy http://proxy-failure:8082
     env_file:
-      - .env
+      # Optional so the proxies can run standalone (e.g. demo/demo_local.sh)
+      # on machines without Sauce Labs credentials.
+      - path: .env
+        required: false
 
   #========================================#
   # Environment 2: Latency                 #
@@ -68,7 +71,10 @@ services:
       --direct-domains ".*\\.apple\\.com"
       --proxy http://proxy-latency:8084
     env_file:
-      - .env
+      # Optional so the proxies can run standalone (e.g. demo/demo_local.sh)
+      # on machines without Sauce Labs credentials.
+      - path: .env
+        required: false
 
   #========================================#
   # Environment 3: Normal (No Chaos)       #
@@ -98,7 +104,10 @@ services:
       --direct-domains ".*\\.apple\\.com"
       --proxy http://proxy-normal:8086
     env_file:
-      - .env
+      # Optional so the proxies can run standalone (e.g. demo/demo_local.sh)
+      # on machines without Sauce Labs credentials.
+      - path: .env
+        required: false
 
   #========================================#
   # Environment 4: Random Failure (NEW)    #
@@ -138,5 +147,8 @@ services:
       --direct-domains ".*\\.apple\\.com"
       --proxy http://proxy-random-failure:8088
     env_file:
-      - .env
+      # Optional so the proxies can run standalone (e.g. demo/demo_local.sh)
+      # on machines without Sauce Labs credentials.
+      - path: .env
+        required: false
 

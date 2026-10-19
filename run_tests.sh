@@ -16,13 +16,15 @@ xcodebuild clean \
 
 # --- 2. Build the App for Testing ---
 echo "--- Building App for Testing ---"
+# Build unsigned: no Apple Developer account needed.
+# Sauce Labs automatically re-signs the app for its real devices.
 xcodebuild build-for-testing \
  -project "ChaosCanary.xcodeproj" \
  -scheme "ChaosCanary" \
  -sdk iphoneos \
  -destination "generic/platform=iOS" \
  -derivedDataPath "build" \
- -allowProvisioningUpdates
+ CODE_SIGNING_ALLOWED=NO
 
 # --- 3. Run the Tests on Sauce Labs ---
 echo "--- Starting Sauce Labs Test Run ---"
