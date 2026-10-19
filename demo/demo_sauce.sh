@@ -63,6 +63,12 @@ set -a; source ./.env; set +a
 : "${SAUCE_USERNAME:?SAUCE_USERNAME is missing from .env}"
 : "${SAUCE_ACCESS_KEY:?SAUCE_ACCESS_KEY is missing from .env}"
 : "${SAUCE_REGION:?SAUCE_REGION is missing from .env}"
+if [ "$SAUCE_USERNAME" = "your-sauce-username" ] || [ "$SAUCE_ACCESS_KEY" = "your-sauce-access-key" ]; then
+  echo "ERROR: .env still contains the placeholder credentials from .env.example."
+  echo "Edit .env with your real Sauce Labs credentials, found at:"
+  echo "  https://app.saucelabs.com/user-settings  (Username and Access Key)"
+  exit 1
+fi
 echo "Sauce user:   ${SAUCE_USERNAME}"
 echo "Sauce region: ${SAUCE_REGION}"
 
@@ -95,6 +101,14 @@ wait_for_tunnel() {
   echo "Waiting for tunnel '${name}'..."
   until ${COMPOSE} logs "tunnel-${name}" 2>/dev/null | grep -q "Sauce Connect is up"; do
     tries=$((tries + 1))
+    # Fail fast if the tunnel container died (e.g. bad credentials).
+    if [ -z "$(${COMPOSE} ps --status running -q "tunnel-${name}" 2>/dev/null)" ]; then
+      echo "ERROR: tunnel-${name} exited before coming up. Recent logs:"
+      ${COMPOSE} logs --tail 10 "tunnel-${name}"
+      echo ""
+      echo "Most common cause: bad credentials in .env"
+      exit 1
+    fi
     if [ "$tries" -gt 120 ]; then
       echo "ERROR: tunnel-${name} did not come up within 2 minutes."
       echo "Inspect with: ${COMPOSE} logs tunnel-${name}"
