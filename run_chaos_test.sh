@@ -42,13 +42,15 @@ if [ "$REBUILD" = true ]; then
   echo "--- '--rebuild' flag detected. Cleaning and Building Xcode Project ---"
   # Redirecting build output to /dev/null for a cleaner log. Remove > /dev/null to see full build logs.
   xcodebuild clean -project "ChaosCanary.xcodeproj" -scheme "ChaosCanary" > /dev/null
+  # Build unsigned: no Apple Developer account needed.
+  # Sauce Labs automatically re-signs the app for its real devices.
   xcodebuild build-for-testing \
    -project "ChaosCanary.xcodeproj" \
    -scheme "ChaosCanary" \
    -sdk iphoneos \
    -destination "generic/platform=iOS" \
    -derivedDataPath "build" \
-   -allowProvisioningUpdates > /dev/null
+   CODE_SIGNING_ALLOWED=NO > /dev/null
   echo "--- Build Complete ---"
 else
   echo "--- Skipping build. Using existing artifacts. ---"

@@ -71,13 +71,15 @@ APP_PATH="build/Build/Products/Debug-iphoneos/ChaosCanary.app"
 RUNNER_PATH="build/Build/Products/Debug-iphoneos/ChaosCanaryUITests-Runner.app"
 if [ "$EXTRA_FLAGS" = "--rebuild" ] || [ ! -d "$APP_PATH" ] || [ ! -d "$RUNNER_PATH" ]; then
   banner "Building the iOS app + test runner (this takes a few minutes)"
+  # Build unsigned: no Apple Developer account needed.
+  # Sauce Labs automatically re-signs the app for its real devices.
   xcodebuild build-for-testing \
     -project "ChaosCanary.xcodeproj" \
     -scheme "ChaosCanary" \
     -sdk iphoneos \
     -destination "generic/platform=iOS" \
     -derivedDataPath "build" \
-    -allowProvisioningUpdates
+    CODE_SIGNING_ALLOWED=NO
 else
   echo "Using existing build artifacts in ./build (pass --rebuild to force)."
 fi

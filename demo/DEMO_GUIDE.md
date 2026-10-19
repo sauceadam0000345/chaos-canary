@@ -30,7 +30,7 @@ Audience take-away: chaos testing isn't a Netflix-scale luxury; it's a docker-co
 | 1 | Docker Desktop running | `docker info` |
 | 2 | Docker image pre-built (first build is slow — never build live) | `docker compose build` |
 | 3 | `.env` exists with real Sauce credentials | `cp .env.example .env` and edit |
-| 4 | App + test runner pre-built | `demo/demo_sauce.sh normal --rebuild` once, or see README |
+| 4 | App + test runner pre-built (**no Apple ID needed** — the build is unsigned and Sauce Labs re-signs on-device) | `demo/demo_sauce.sh normal --rebuild` once, or see README |
 | 5 | `saucectl` installed & authenticated | `saucectl --version` |
 | 6 | Sauce Labs dashboard open in a browser tab | app.saucelabs.com |
 | 7 | Vendetta against flaky Wi-Fi | rehearse Act 1 as fallback (needs nothing but Docker) |
@@ -134,6 +134,7 @@ Impress-the-architect answers:
 | `Cannot connect to the Docker daemon` | Start Docker Desktop |
 | Tunnel stuck before "Sauce Connect is up" | `docker compose logs tunnel-<mode>` — usually bad credentials or stale tunnel name; `docker compose down` and retry |
 | saucectl: app files missing | run `demo/demo_sauce.sh <mode> --rebuild` once |
+| xcodebuild: "No Accounts / No profiles" | You're building with signing enabled — the scripts pass `CODE_SIGNING_ALLOWED=NO` on purpose; Sauce re-signs on-device. Or add your Apple ID in Xcode → Settings → Accounts and sign for real |
 | Random mode shows all 200s | dice were kind (0.75¹⁰ ≈ 5.6%); re-run — or lower the odds live: edit `CHAOS_FAILURE_RATE`, `docker compose up -d proxy-random-failure` |
 | Nothing intercepting in mitmweb | confirm you're looking at the right UI port (compose file is the source of truth) |
 

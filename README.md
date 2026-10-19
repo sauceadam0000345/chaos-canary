@@ -58,8 +58,10 @@ xcodebuild build-for-testing \
  -sdk iphoneos \
  -destination "generic/platform=iOS" \
  -derivedDataPath "build" \
- -allowProvisioningUpdates
+ CODE_SIGNING_ALLOWED=NO
 ```
+
+> **_NOTE:_** The app is built **unsigned** (`CODE_SIGNING_ALLOWED=NO`), so no Apple Developer account is required. Sauce Labs automatically re-signs iOS apps when running on its real devices. If you prefer to sign with your own Apple ID instead, add the account in Xcode → Settings → Accounts, replace `CODE_SIGNING_ALLOWED=NO` with `-allowProvisioningUpdates`, and update `DEVELOPMENT_TEAM` in the project to your own team.
 
 ---
 
